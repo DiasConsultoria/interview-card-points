@@ -1,0 +1,49 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "username": "Felipe",
+      "password": "Felipe1234",
+      "cpf": "87498736251",
+      "email": "emailfelipe@gmail.com",
+      "tier": 2,
+      "points": 0
+    },
+    {
+      "id": 2,
+      "username": "Tiago",
+      "password": "Tiago1234",
+      "cpf": "83212349210",
+      "email": "emailtiago@gmail.com",
+      "tier": 3,
+      "points": 1000
+    },
+    {
+      "id": 3,
+      "username": "Bruno",
+      "password": "Bruno1234",
+      "cpf": "99999999999",
+      "email": "emailbruno@gmail.com",
+      "tier": 1,
+      "points": 0
+    },
+    {
+      "id": 4,
+      "username": "Arthur",
+      "password": "Arthur1234",
+      "cpf": "88888888888",
+      "email": "emailarthur@gmail.com",
+      "tier": 1,
+      "points": 0
+    },
+    {
+      "id": 5,
+      "username": "Gabriel",
+      "password": "Gabriel1234",
+      "cpf": "77777777777",
+      "email": "emailgabriel@gmail.com",
+      "tier": 3,
+      "points": 0
+    }
+  ]
+}

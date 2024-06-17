@@ -17,5 +17,7 @@ public interface UserService {
 
     ResponseEntity<UserModel> updateUser(UserModel user);
 
-    ResponseEntity<UserModel> deleteUser(int id);
+    ResponseEntity<UserModel> deleteUser(Integer id);
+
+    ResponseEntity<UserModel> login(String username, String password);
 }

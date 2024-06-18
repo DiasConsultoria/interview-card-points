@@ -1,4 +1,4 @@
-package com.interview.points.models;
+package com.interview.points.entitys;
 
 
 import jakarta.persistence.Column;
@@ -18,7 +18,7 @@ import java.math.BigDecimal;
 @Table(name = "tier")
 @AllArgsConstructor
 @NoArgsConstructor
-public class TierModel {
+public class Tier {
 
 
     @Id

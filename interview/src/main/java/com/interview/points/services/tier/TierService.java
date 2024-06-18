@@ -1,15 +1,28 @@
 package com.interview.points.services.tier;
 
-import com.interview.points.models.TierModel;
+import com.interview.points.entitys.Tier;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
 public interface TierService {
 
-    ResponseEntity<List<TierModel>> getTiers();
+    /**
+     *
+     */
+    ResponseEntity<List<Tier>> getTiers();
 
-    ResponseEntity<TierModel> getTier(Integer id);
+    /**
+     *
+     * @param id ->
+     * @return ->
+     */
+    ResponseEntity<Tier> getTier(Integer id);
 
-    ResponseEntity<TierModel> addTier(TierModel tier);
+    /**
+     *
+     * @param tier ->
+     * @return ->
+     */
+    ResponseEntity<Tier> addTier(Tier tier);
 }

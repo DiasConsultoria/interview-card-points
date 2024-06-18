@@ -1,13 +1,10 @@
 package com.interview.points.services.tier;
 
-import com.interview.points.models.TierModel;
-import com.interview.points.models.UserModel;
+import com.interview.points.entitys.Tier;
 import com.interview.points.repositorys.TierRepository;
-import com.interview.points.services.user.UserServiceImp;
 import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.redisson.api.RedissonClient;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,11 +21,11 @@ public class TierServiceImp implements TierService {
     private final TierRepository tierRepository;
 
     @Override
-    public ResponseEntity<List<TierModel>> getTiers() {
+    public ResponseEntity<List<Tier>> getTiers() {
 
         try {
             logger.info("Getting all tiers");
-            List<TierModel> tiers = tierRepository.findAll();
+            List<Tier> tiers = tierRepository.findAll();
             return ResponseEntity.ok(tiers);
         } catch (DataAccessException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
@@ -36,7 +33,7 @@ public class TierServiceImp implements TierService {
     }
 
     @Override
-    public ResponseEntity<TierModel> getTier(Integer id) {
+    public ResponseEntity<Tier> getTier(Integer id) {
         return tierRepository
                 .findById(id)
                 .map(ResponseEntity::ok)
@@ -44,7 +41,7 @@ public class TierServiceImp implements TierService {
     }
 
     @Override
-    public ResponseEntity<TierModel> addTier(TierModel tier) {
+    public ResponseEntity<Tier> addTier(Tier tier) {
         try {
             logger.info("Creating new tier");
             tierRepository.save(tier);

@@ -1,9 +1,8 @@
 package com.interview.points.services.user;
 
-import com.interview.points.models.UserModel;
+import com.interview.points.entitys.User;
 import com.interview.points.repositorys.UserRepository;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.redisson.api.RedissonClient;
@@ -27,10 +26,10 @@ public class UserServiceImp implements UserService{
 
 
     @Override
-    public ResponseEntity<List<UserModel>> getAllUsers() {
+    public ResponseEntity<List<User>> getAllUsers() {
         try {
             logger.info("Retrieving users");
-            List<UserModel> users = userRepository.findAll();
+            List<User> users = userRepository.findAll();
             return ResponseEntity.ok(users);
         } catch (DataAccessException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
@@ -38,7 +37,7 @@ public class UserServiceImp implements UserService{
     }
 
     @Override
-    public ResponseEntity<UserModel> getUserById(Integer id) {
+    public ResponseEntity<User> getUserById(Integer id) {
         logger.info("Retrieving user by Id");
         return userRepository
                 .findById(id)
@@ -48,10 +47,10 @@ public class UserServiceImp implements UserService{
 
 
     @Override
-    public ResponseEntity<UserModel> getUserByCpf(String cpf) {
+    public ResponseEntity<User> getUserByCpf(String cpf) {
         try {
             logger.info("Retrieving user by cpf");
-            UserModel user = userRepository.findByCpf(cpf);
+            User user = userRepository.findByCpf(cpf);
             return ResponseEntity.ok(user);
         } catch (DataAccessException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
@@ -59,7 +58,7 @@ public class UserServiceImp implements UserService{
     }
 
     @Override
-    public ResponseEntity<UserModel> createUser(UserModel user) {
+    public ResponseEntity<User> createUser(User user) {
         try {
             logger.info("Creating new user");
             userRepository.save(user);
@@ -70,7 +69,7 @@ public class UserServiceImp implements UserService{
     }
 
     @Override
-    public ResponseEntity<UserModel> updateUser(UserModel user) {
+    public ResponseEntity<User> updateUser(User user) {
         try {
             logger.info("Updating user");
             userRepository.save(user);
@@ -81,10 +80,10 @@ public class UserServiceImp implements UserService{
     }
 
     @Override
-    public ResponseEntity<UserModel> deleteUser(Integer id) {
+    public ResponseEntity<User> deleteUser(Integer id) {
         try {
             logger.info("Retrieving user by Id to delete");
-            Optional<UserModel> user = userRepository.findById(id);
+            Optional<User> user = userRepository.findById(id);
 
             try {
                 if (user.isPresent()) {
@@ -102,11 +101,11 @@ public class UserServiceImp implements UserService{
     }
 
     @Override
-    public ResponseEntity<UserModel> login(String username, String password) {
+    public ResponseEntity<User> login(String username, String password) {
 
         try {
             logger.info("Login");
-            UserModel user = userRepository.findUserByLogin(username);
+            User user = userRepository.findUserByLogin(username);
 
             if (password.equals(user.getPassword())) {
                 return ResponseEntity.ok(user);

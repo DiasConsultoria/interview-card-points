@@ -1,12 +1,10 @@
 package com.interview.points.services.points;
 
-import com.interview.points.models.TierModel;
-import com.interview.points.models.UserModel;
+import com.interview.points.entitys.Tier;
+import com.interview.points.entitys.User;
+import com.interview.points.records.PointsRecord;
 import com.interview.points.repositorys.TierRepository;
 import com.interview.points.repositorys.UserRepository;
-import com.interview.points.services.tier.TierService;
-import com.interview.points.services.user.UserService;
-import com.interview.points.services.user.UserServiceImp;
 import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -31,9 +29,9 @@ public class PointsServiceImp implements PointsService{
 
 
     @Override
-    public ResponseEntity<?> addPoints(Integer id, BigDecimal points) {
+    public ResponseEntity<String> issuePointsService(Integer id, BigDecimal points) {
 
-        var lock = redissonClient.getLock("PointsServiceImp");
+        var lock = redissonClient.getLock("PointsServiceImp_" + id);
 
         try {
             boolean isLocked =  lock.tryLock();
@@ -44,20 +42,20 @@ public class PointsServiceImp implements PointsService{
                     // Simulate some work
                     // Thread.sleep(10000);
                     logger.info("Retrieving user");
-                    Optional<UserModel> user = userRepository.findById(id);
+                    Optional<User> user = userRepository.findById(id);
 
                     try {
                         if (user.isPresent()) {
                             logger.info("Retrieving multiplier");
-                            Optional<TierModel> tier = tierRepository.findById(user.get().getTier());
+                            Optional<Tier> tier = tierRepository.findById(user.get().getTier());
 
                             BigDecimal multipliedPoints = points.multiply(tier.get().getMultiplier());
 
                             BigDecimal updatedPoints = user.get().getPoints().add(multipliedPoints);
 
-                            userRepository.updatePoints(id, updatedPoints);
+                            userRepository.issuePointsQuery(id, updatedPoints);
 
-                            return ResponseEntity.status(HttpStatus.CREATED).build();
+                            return ResponseEntity.ok("Points issued successfully");
                         }
                     } catch (DataAccessException e){
                         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
@@ -73,17 +71,67 @@ public class PointsServiceImp implements PointsService{
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
-        return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).build();
-
+        return ResponseEntity.status(HttpStatus.CONFLICT).build();
     }
 
     @Override
-    public ResponseEntity<?> getPoints(Integer id) {
-        return null;
+    public ResponseEntity<PointsRecord> getPoints(Integer id) {
+
+        try {
+            logger.info("Retrieving user");
+            Optional<User> user = userRepository.findById(id);
+            if (user.isPresent()) {
+                logger.info("Retrieving points");
+                PointsRecord pointsRecord = new PointsRecord(user.get().getUsername(), user.get().getCpf(), user.get().getTier(), user.get().getPoints());
+                return ResponseEntity.ok(pointsRecord);
+            }
+        } catch (DataAccessException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
 
     @Override
-    public ResponseEntity<?> removePoints(Integer id,BigDecimal points) {
-        return null;
+    public ResponseEntity<String> redeemPointsService(Integer id, BigDecimal points) {
+
+        var lock = redissonClient.getLock("PointsServiceImp_" + id);
+
+        try {
+            boolean isLocked =  lock.tryLock();
+
+            try {
+
+                if (isLocked) {
+                    // Simulate some work
+                    // Thread.sleep(10000);
+                    logger.info("Retrieving user");
+                    Optional<User> user = userRepository.findById(id);
+
+                    try {
+                        if (user.isPresent()) {
+
+                            if (user.get().getPoints().compareTo(BigDecimal.ZERO) == 0) {
+                                return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+                            }
+
+                            BigDecimal updatedPoints = user.get().getPoints().subtract(points);
+                            userRepository.redeemPointsQuery(id, updatedPoints);
+                            return ResponseEntity.ok(String.format("Successfully redeeming %s points", points.toString()));
+                        }
+                    } catch (DataAccessException e){
+                        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+                    } finally {
+                        // Ensure the lock is released even if an exception occurs
+                        lock.unlock();
+                    }
+                }
+
+            } catch (DataAccessException e) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+        return ResponseEntity.status(HttpStatus.CONFLICT).build();
     }
 }

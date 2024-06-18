@@ -1,23 +1,23 @@
 package com.interview.points.services.user;
 
-import com.interview.points.models.UserModel;
+import com.interview.points.entitys.User;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
 public interface UserService {
 
-    ResponseEntity<List<UserModel>> getAllUsers();
+    ResponseEntity<List<User>> getAllUsers();
 
-    ResponseEntity<UserModel> getUserById(Integer id);
+    ResponseEntity<User> getUserById(Integer id);
 
-    ResponseEntity<UserModel> getUserByCpf(String cpf);
+    ResponseEntity<User> getUserByCpf(String cpf);
 
-    ResponseEntity<UserModel> createUser(UserModel user);
+    ResponseEntity<User> createUser(User user);
 
-    ResponseEntity<UserModel> updateUser(UserModel user);
+    ResponseEntity<User> updateUser(User user);
 
-    ResponseEntity<UserModel> deleteUser(Integer id);
+    ResponseEntity<User> deleteUser(Integer id);
 
-    ResponseEntity<UserModel> login(String username, String password);
+    ResponseEntity<User> login(String username, String password);
 }

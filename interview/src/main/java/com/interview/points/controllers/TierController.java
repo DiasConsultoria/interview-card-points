@@ -1,14 +1,12 @@
 package com.interview.points.controllers;
 
-import com.interview.points.models.TierModel;
-import com.interview.points.models.UserModel;
-import com.interview.points.services.points.PointsService;
+import com.interview.points.entitys.Tier;
 import com.interview.points.services.tier.TierService;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 
@@ -19,13 +17,15 @@ public class TierController {
 
     private final TierService tierService;
 
+    @Operation(summary = "Retrieve all tiers", description = "Service responsible for retrieve all tiers", tags = "Tier")
     @GetMapping(value = "/getAll")
-    public ResponseEntity<List<TierModel>> getAll() {
+    public ResponseEntity<List<Tier>> getAll() {
         return tierService.getTiers();
     }
 
+    @Operation(summary = "Create a new tier", description = "Service responsible for create a new tier", tags = "Tier")
     @PostMapping(value = "/create")
-    public ResponseEntity<?> create(@RequestBody TierModel tier) {
+    public ResponseEntity<?> create(@RequestBody Tier tier) {
         return tierService.addTier(tier);
     }
 

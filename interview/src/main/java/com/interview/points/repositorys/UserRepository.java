@@ -1,6 +1,6 @@
 package com.interview.points.repositorys;
 
-import com.interview.points.models.UserModel;
+import com.interview.points.entitys.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -12,17 +12,22 @@ import java.math.BigDecimal;
 
 
 @Repository
-public interface UserRepository extends JpaRepository<UserModel, Integer> {
+public interface UserRepository extends JpaRepository<User, Integer> {
 
-    @Query(value = "SELECT u FROM UserModel u WHERE u.cpf = :cpf")
-    UserModel findByCpf(@Param("cpf") String cpf);
+    @Query(value = "SELECT u FROM User u WHERE u.cpf = :cpf")
+    User findByCpf(@Param("cpf") String cpf);
 
-    @Query(value = "select u from UserModel u where u.username = :username")
-    UserModel findUserByLogin(@Param("username") String username);
+    @Query(value = "select u from User u where u.username = :username")
+    User findUserByLogin(@Param("username") String username);
 
     @Modifying
     @Transactional
-    @Query("UPDATE UserModel u SET u.points = :updatedPoints WHERE u.id = :id")
-    void updatePoints(@Param("id") Integer id, @Param("updatedPoints") BigDecimal updatedPoints);
+    @Query("UPDATE User u SET u.points = :updatedPoints WHERE u.id = :id")
+    void issuePointsQuery(@Param("id") Integer id, @Param("updatedPoints") BigDecimal updatedPoints);
+
+    @Modifying
+    @Transactional
+    @Query("UPDATE User u SET u.points = :updatedPoints WHERE u.id = :id")
+    void redeemPointsQuery(@Param("id") Integer id, @Param("updatedPoints") BigDecimal updatedPoints);
 
 }

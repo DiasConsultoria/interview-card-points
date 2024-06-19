@@ -1,6 +1,6 @@
-<mxfile host="app.diagrams.net" modified="2024-06-19T03:35:05.348Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36" etag="GRGDWgjlCBfoh0xz4Uqf" version="24.5.5" type="github">
+<mxfile host="app.diagrams.net" modified="2024-06-19T03:37:16.319Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36" etag="uUJUzlfFr1hytczAdQKv" version="24.5.5" type="github">
   <diagram id="prtHgNgQTEPvFCAcTncT" name="Page-1">
-    <mxGraphModel dx="1509" dy="796" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+    <mxGraphModel dx="2206" dy="1163" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -38,7 +38,7 @@
           <mxGeometry y="20" width="310" height="660" as="geometry" />
         </mxCell>
         <mxCell id="Q3Qc4RJNEyqU-LYfuUZ3-27" value="POST&lt;div&gt;/api/v1/points/issue&lt;br&gt;@Param id&lt;br&gt;@Param points&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;strokeColor=#E07A5F;fontColor=#393C56;fillColor=#F2CC8F;" vertex="1" parent="Q3Qc4RJNEyqU-LYfuUZ3-6">
-          <mxGeometry x="95" y="50" width="120" height="60" as="geometry" />
+          <mxGeometry x="95" y="60" width="120" height="60" as="geometry" />
         </mxCell>
         <mxCell id="Q3Qc4RJNEyqU-LYfuUZ3-7" value="PointsService" style="swimlane;whiteSpace=wrap;html=1;strokeColor=#E07A5F;fontColor=#393C56;fillColor=#F2CC8F;startSize=23;" vertex="1" parent="Q3Qc4RJNEyqU-LYfuUZ3-18">
           <mxGeometry x="310" y="20" width="250" height="660" as="geometry" />

@@ -2,12 +2,14 @@ package com.interview.points.service.points;
 
 import com.interview.points.entity.Tier;
 import com.interview.points.entity.User;
+import com.interview.points.provider.LockProviderImp;
 import com.interview.points.record.PointsRecord;
 import com.interview.points.repository.TierRepository;
 import com.interview.points.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
@@ -25,14 +27,12 @@ public class PointsServiceImp implements PointsService{
 
     private final UserRepository userRepository;
     private final TierRepository tierRepository;
-    private final RedissonClient redissonClient;
-
+    private final LockProviderImp lockProviderImp;
 
     @Override
     public ResponseEntity<String> issuePointsService(Integer id, BigDecimal points) {
 
-        var lock = redissonClient.getLock("PointsServiceImp_" + id);
-
+        RLock lock = lockProviderImp.getLock("PointsServiceImp_", id);
         try {
             boolean isLocked =  lock.tryLock();
 
@@ -94,7 +94,7 @@ public class PointsServiceImp implements PointsService{
     @Override
     public ResponseEntity<String> redeemPointsService(Integer id, BigDecimal points) {
 
-        var lock = redissonClient.getLock("PointsServiceImp_" + id);
+        RLock lock = lockProviderImp.getLock("PointsServiceImp_", id);
 
         try {
             boolean isLocked =  lock.tryLock();

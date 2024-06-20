@@ -2,6 +2,7 @@ package com.interview.points.service.points;
 
 import com.interview.points.entity.Tier;
 import com.interview.points.entity.User;
+import com.interview.points.provider.LockProviderImp;
 import com.interview.points.record.PointsRecord;
 import com.interview.points.repository.TierRepository;
 import com.interview.points.repository.UserRepository;
@@ -34,7 +35,7 @@ class PointsServiceImpTest {
     @Mock
     private TierRepository tierRepository;
     @Mock
-    private RedissonClient redissonClient;
+    private LockProviderImp lockProviderImp;
     @Mock
     private RLock lock;
 
@@ -57,7 +58,7 @@ class PointsServiceImpTest {
         when(tierRepository.findById(user.getTier()))
                 .thenReturn(Optional.of(tier));
 
-        when(redissonClient.getLock("PointsServiceImp_" + user.getId())).thenReturn(lock);
+        when(lockProviderImp.getLock("PointsServiceImp_", user.getId())).thenReturn(lock);
 
         when(lock.tryLock()).thenReturn(true);
 
@@ -89,7 +90,7 @@ class PointsServiceImpTest {
         when(userRepository.findById(user.getId()))
                 .thenReturn(Optional.of(user));
 
-        when(redissonClient.getLock("PointsServiceImp_" + user.getId())).thenReturn(lock);
+        when(lockProviderImp.getLock("PointsServiceImp_", user.getId())).thenReturn(lock);
 
         when(lock.tryLock()).thenReturn(true);
 

@@ -3,7 +3,9 @@ package com.interview.points.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.interview.points.entity.Tier;
 import com.interview.points.entity.User;
+import com.interview.points.record.IssueRecord;
 import com.interview.points.record.PointsRecord;
+import com.interview.points.record.RedeemRecord;
 import com.interview.points.service.points.PointsService;
 import org.hamcrest.CoreMatchers;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,6 +15,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MockMvc;
@@ -42,15 +45,15 @@ class PointsControllerTest {
     private ObjectMapper objectMapper;
 
     private PointsRecord pointsRecord;
-    private BigDecimal points;
     private User user;
-    private Tier tier;
+    private IssueRecord issueRecord;
+    private RedeemRecord redeemRecord;
 
     @BeforeEach
     void setUp() {
         pointsRecord = new PointsRecord("Bruno", "99999999999", 1, new BigDecimal(2000));
-        tier = new Tier(1,new BigDecimal(1));
-        points = new BigDecimal("1000");
+        issueRecord = new IssueRecord("Points issued successfully", new BigDecimal(1000), new BigDecimal(3000), new BigDecimal(2000));
+        redeemRecord = new RedeemRecord(String.format("Successfully redeeming %s points", 1000), new BigDecimal(1000), new BigDecimal(3000), new BigDecimal(2000)) ;
         user = new User( 1, "Bruno", "Bruno1234", "99999999999", "emailbruno@gmail.com", 1, new BigDecimal(2000));
     }
 
@@ -76,7 +79,7 @@ class PointsControllerTest {
     @Test
     void issuePoints() throws Exception {
 
-        ResponseEntity<String> issueResp = ResponseEntity.ok("Points issued successfully");
+        ResponseEntity<IssueRecord> issueResp = ResponseEntity.ok(issueRecord);
 
         given(pointsService.issuePointsService(1, new BigDecimal(1000))).willReturn(issueResp);
 
@@ -89,7 +92,7 @@ class PointsControllerTest {
     @Test
     void redeemPoints() throws Exception {
 
-        ResponseEntity<String> issueResp = ResponseEntity.ok(String.format("Successfully redeeming %s points", points.toString()));
+        ResponseEntity<RedeemRecord> issueResp = ResponseEntity.ok(redeemRecord);
 
         given(pointsService.redeemPointsService(1, new BigDecimal(1000))).willReturn(issueResp);
 

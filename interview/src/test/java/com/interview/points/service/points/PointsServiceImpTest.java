@@ -4,7 +4,9 @@ import com.interview.points.entity.Tier;
 import com.interview.points.entity.User;
 import com.interview.points.provider.LockProvider;
 import com.interview.points.provider.RedisLockProvider;
+import com.interview.points.record.IssueRecord;
 import com.interview.points.record.PointsRecord;
+import com.interview.points.record.RedeemRecord;
 import com.interview.points.repository.TierRepository;
 import com.interview.points.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -62,7 +64,7 @@ class PointsServiceImpTest {
 
         when(lock.tryLock()).thenReturn(true);
 
-        ResponseEntity<String> resp = underTest.issuePointsService(user.getId(), points);
+        ResponseEntity<IssueRecord> resp = underTest.issuePointsService(user.getId(), points);
         assertNotNull(resp.getBody());
         assertEquals(HttpStatus.OK, resp.getStatusCode());
         verify(userRepository, times(1)).findById(user.getId());
@@ -94,7 +96,7 @@ class PointsServiceImpTest {
 
         when(lock.tryLock()).thenReturn(true);
 
-        ResponseEntity<String> resp = underTest.redeemPointsService(user.getId(), points);
+        ResponseEntity<RedeemRecord> resp = underTest.redeemPointsService(user.getId(), points);
         assertNotNull(resp.getBody());
         assertEquals(HttpStatus.OK, resp.getStatusCode());
         verify(userRepository, times(1)).findById(user.getId());

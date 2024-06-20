@@ -3,7 +3,9 @@ package com.interview.points.service.points;
 import com.interview.points.entity.Tier;
 import com.interview.points.entity.User;
 import com.interview.points.provider.LockProvider;
+import com.interview.points.record.IssueRecord;
 import com.interview.points.record.PointsRecord;
+import com.interview.points.record.RedeemRecord;
 import com.interview.points.repository.TierRepository;
 import com.interview.points.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -29,7 +31,7 @@ public class PointsServiceImp implements PointsService{
     private final LockProvider lockProvider;
 
     @Override
-    public ResponseEntity<String> issuePointsService(Integer id, BigDecimal points) {
+    public ResponseEntity<IssueRecord> issuePointsService(Integer id, BigDecimal points) {
 
         RLock lock = lockProvider.getLock("PointsServiceImp_", id);
         try {
@@ -39,7 +41,7 @@ public class PointsServiceImp implements PointsService{
 
                 if (isLocked) {
                     // Simulate some work
-                    Thread.sleep(10000);
+                    //Thread.sleep(10000);
                     logger.info("Retrieving user");
                     Optional<User> user = userRepository.findById(id);
 
@@ -54,7 +56,7 @@ public class PointsServiceImp implements PointsService{
 
                             userRepository.issuePointsQuery(id, updatedPoints);
 
-                            return ResponseEntity.ok("Points issued successfully");
+                            return ResponseEntity.ok(new IssueRecord("Points issued successfully", user.get().getPoints(), updatedPoints, points));
                         }
                     } catch (DataAccessException e){
                         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
@@ -91,7 +93,7 @@ public class PointsServiceImp implements PointsService{
     }
 
     @Override
-    public ResponseEntity<String> redeemPointsService(Integer id, BigDecimal points) {
+    public ResponseEntity<RedeemRecord> redeemPointsService(Integer id, BigDecimal points) {
 
         RLock lock = lockProvider.getLock("PointsServiceImp_", id);
 
@@ -115,7 +117,8 @@ public class PointsServiceImp implements PointsService{
 
                             BigDecimal updatedPoints = user.get().getPoints().subtract(points);
                             userRepository.redeemPointsQuery(id, updatedPoints);
-                            return ResponseEntity.ok(String.format("Successfully redeeming %s points", points.toString()));
+
+                            return ResponseEntity.ok(new RedeemRecord(String.format("Successfully redeeming %s points", points.toString()), user.get().getPoints(), updatedPoints, points));
                         }
                     } catch (DataAccessException e){
                         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();

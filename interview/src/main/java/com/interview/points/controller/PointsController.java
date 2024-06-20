@@ -1,5 +1,6 @@
 package com.interview.points.controller;
 
+import com.interview.points.record.IssueRecord;
 import com.interview.points.service.points.PointsService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +25,7 @@ public class PointsController {
 
     @Operation(summary = "Issue points to a user", description = "Service responsible to issue points to a user", tags = "Points")
     @PostMapping(value = "/issue")
-    public ResponseEntity<?> issuePoints(@RequestParam Integer id, @RequestParam BigDecimal points) {
+    public ResponseEntity<IssueRecord> issuePoints(@RequestParam Integer id, @RequestParam BigDecimal points) {
         return pointsService.issuePointsService(id, points);
     }
 

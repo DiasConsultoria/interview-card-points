@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class LockProviderImp implements LockProvider{
+public class RedisLockProvider implements LockProvider{
 
     private final RedissonClient redissonClient;
 

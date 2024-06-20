@@ -2,7 +2,8 @@ package com.interview.points.service.points;
 
 import com.interview.points.entity.Tier;
 import com.interview.points.entity.User;
-import com.interview.points.provider.LockProviderImp;
+import com.interview.points.provider.LockProvider;
+import com.interview.points.provider.RedisLockProvider;
 import com.interview.points.record.PointsRecord;
 import com.interview.points.repository.TierRepository;
 import com.interview.points.repository.UserRepository;
@@ -13,7 +14,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.redisson.api.RLock;
-import org.redisson.api.RedissonClient;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -35,7 +35,7 @@ class PointsServiceImpTest {
     @Mock
     private TierRepository tierRepository;
     @Mock
-    private LockProviderImp lockProviderImp;
+    private LockProvider lockProvider;
     @Mock
     private RLock lock;
 
@@ -58,7 +58,7 @@ class PointsServiceImpTest {
         when(tierRepository.findById(user.getTier()))
                 .thenReturn(Optional.of(tier));
 
-        when(lockProviderImp.getLock("PointsServiceImp_", user.getId())).thenReturn(lock);
+        when(lockProvider.getLock("PointsServiceImp_", user.getId())).thenReturn(lock);
 
         when(lock.tryLock()).thenReturn(true);
 
@@ -90,7 +90,7 @@ class PointsServiceImpTest {
         when(userRepository.findById(user.getId()))
                 .thenReturn(Optional.of(user));
 
-        when(lockProviderImp.getLock("PointsServiceImp_", user.getId())).thenReturn(lock);
+        when(lockProvider.getLock("PointsServiceImp_", user.getId())).thenReturn(lock);
 
         when(lock.tryLock()).thenReturn(true);
 

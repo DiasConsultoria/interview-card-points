@@ -2,7 +2,7 @@ package com.interview.points.service.points;
 
 import com.interview.points.entity.Tier;
 import com.interview.points.entity.User;
-import com.interview.points.provider.LockProviderImp;
+import com.interview.points.provider.LockProvider;
 import com.interview.points.record.PointsRecord;
 import com.interview.points.repository.TierRepository;
 import com.interview.points.repository.UserRepository;
@@ -10,7 +10,6 @@ import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.redisson.api.RLock;
-import org.redisson.api.RedissonClient;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,12 +26,12 @@ public class PointsServiceImp implements PointsService{
 
     private final UserRepository userRepository;
     private final TierRepository tierRepository;
-    private final LockProviderImp lockProviderImp;
+    private final LockProvider lockProvider;
 
     @Override
     public ResponseEntity<String> issuePointsService(Integer id, BigDecimal points) {
 
-        RLock lock = lockProviderImp.getLock("PointsServiceImp_", id);
+        RLock lock = lockProvider.getLock("PointsServiceImp_", id);
         try {
             boolean isLocked =  lock.tryLock();
 
@@ -40,7 +39,7 @@ public class PointsServiceImp implements PointsService{
 
                 if (isLocked) {
                     // Simulate some work
-                    // Thread.sleep(10000);
+                    Thread.sleep(10000);
                     logger.info("Retrieving user");
                     Optional<User> user = userRepository.findById(id);
 
@@ -94,7 +93,7 @@ public class PointsServiceImp implements PointsService{
     @Override
     public ResponseEntity<String> redeemPointsService(Integer id, BigDecimal points) {
 
-        RLock lock = lockProviderImp.getLock("PointsServiceImp_", id);
+        RLock lock = lockProvider.getLock("PointsServiceImp_", id);
 
         try {
             boolean isLocked =  lock.tryLock();
